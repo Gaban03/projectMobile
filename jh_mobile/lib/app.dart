@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jh_mobile/views/home_view.dart';
+import 'views/_views_lib.dart';
 
 class App extends StatelessWidget {
   const App({
-    Key? key
-  }) : super(key: key);
+    super.key
+  });
   
   @override
   Widget build(BuildContext context) {
