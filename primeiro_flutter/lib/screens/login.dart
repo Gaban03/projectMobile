@@ -1,23 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:primeiro_flutter/SQLite/sqlite.dart';
+import 'package:primeiro_flutter/screens/teste.dart';
+
+import '../jsonModels/users.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  const Login({super.key}); // Add key parameter
 
   @override
   State<Login> createState() => _LoginState();
 }
 
-// variaveis para armazenar usuario e senha usando textEditingController para controlar o texto quando escrito
-final usuario = TextEditingController();
-final senha = TextEditingController();
-
-// Boleana para mostrar ou nao a senha
-bool visivel = false;
-
-// chave global para o form
-final formKey = GlobalKey<FormState>();
-
 class _LoginState extends State<Login> {
+  
+  // variaveis para armazenar usuario e senha usando textEditingController para controlar o texto quando escrito
+  final userName = TextEditingController();
+  final userPassword = TextEditingController();
+
+  // Boleana para mostrar ou nao a senha
+  bool visivel = true;
+
+  //Boleana para exibiar a mensagem de usuario ou senha invalido
+  bool isLoginTrue = false;
+
+  login() async {
+    var response = await db.login(Users(userName: userName.text, userPassword: userPassword.text));
+    if (response == true){
+      // Se o login esta correto vai para a pagina de teste
+      if(!mounted) return;
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Teste()));
+    }else {
+      // caso nao, habilita a mensagem de usuario ou senha invalido
+      setState(() {
+        isLoginTrue = true;
+      });
+    }
+  }
+
+  // Chama o banco sqlite
+  final db = DatabaseHelper();
+
+  // chave global para o form
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +63,7 @@ class _LoginState extends State<Login> {
                 padding: const EdgeInsets.all(20.0),            
                 // Criei um form para colocar os inputs para controlalos e nao permitir que fiquem vazios
                   child: Form(
-          
+                    key: formKey,
                     child: Column(
                       children: [
                         // Input do usuario
@@ -49,6 +74,13 @@ class _LoginState extends State<Login> {
                             color: Colors.white
                           ),
                           child: TextFormField(
+                            controller: (userName),
+                            validator: (value) {
+                              if(value!.isEmpty){
+                                return "Preencha o campo de usuário";
+                              }
+                              return null;
+                            },
                             decoration: const InputDecoration(
                               icon: Icon(Icons.person),
                               hintText: "Usuario",
@@ -68,6 +100,13 @@ class _LoginState extends State<Login> {
                             color: Colors.white
                           ),
                           child: TextFormField(
+                            controller: (userPassword),
+                            validator: (value) {
+                              if(value!.isEmpty){
+                                return "Preencha o campo de senha";
+                              }
+                              return null;
+                            },
                             obscureText: visivel,
                             decoration: InputDecoration(
                               icon: Icon(Icons.lock),
@@ -94,7 +133,12 @@ class _LoginState extends State<Login> {
                             color: Colors.redAccent
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if(formKey.currentState!.validate()){
+                                //Funcao de login
+                                login();
+                              }
+                            },
                              child: 
                             Text("Login", style: TextStyle(color: Colors.white, fontSize: 20), )
                           ),
@@ -111,6 +155,16 @@ class _LoginState extends State<Login> {
                             }, child: Text("SIGN UP", style: TextStyle(color: Colors.redAccent))),
                           ],
                         ),
+
+                        /*
+                        Mensagem de erro caso a senha ou o usuario estarem invalidos
+                        por padrao a mensagem esta oculta, so é exibida apos a validacao
+                        */
+
+                        isLoginTrue? const Text(
+                          "Usuário ou senha inválido", 
+                          style: TextStyle(color: Colors.redAccent),
+                        ): const SizedBox(),
                       ],
                     ),
                   ),
