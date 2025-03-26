@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of '_views_lib.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key}); // Add key parameter

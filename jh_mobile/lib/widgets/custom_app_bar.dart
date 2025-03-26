@@ -1,54 +1,76 @@
-part of '_widgets_lib.dart';
+part of "_widgets_lib.dart";
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
-  final VoidCallback onMenuPressed;
-  final VoidCallback onNotificationPressed;
-
-  const CustomAppBar({
-    super.key,
-    required this.title,
-    required this.onMenuPressed,
-    required this.onNotificationPressed,
-  });
+  final VoidCallback? onBackPressed;
 
   @override
+  final Size preferredSize;
+
+  const CustomAppBar({
+    Key? key,
+    required this.title,
+    this.onBackPressed,
+    this.preferredSize = const Size.fromHeight(60),
+  }) : super(key: key);
+
+  @override
+  State<CustomAppBar> createState() => _CustomAppBarState();
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
+  @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.red,
-      toolbarHeight: 80,
-      title: Row(
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color.fromARGB(255, 255, 66, 66),
+            Color.fromARGB(255, 255, 0, 0),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      height: widget.preferredSize.height,
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
             icon: const Icon(
-              Icons.menu_rounded,
+              Icons.menu,
               color: Colors.white,
-              size: 40,
             ),
-            onPressed: onMenuPressed,
+            iconSize: 40,
           ),
           Text(
-            title,
+            widget.title,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 35,
+              fontSize: 38,
               fontWeight: FontWeight.bold,
             ),
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.notifications,
-              color: Colors.white,
-              size: 28,
-            ),
-            onPressed: onNotificationPressed,
+          Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  
+                },
+                icon: const Icon(
+                  Icons.notifications,
+                  color: Colors.white,
+                ),
+                iconSize: 30,
+              ),
+            ],
           ),
         ],
       ),
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(80);
 }

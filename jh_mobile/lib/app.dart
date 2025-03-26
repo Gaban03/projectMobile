@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jh_mobile/views/login.dart';
+import 'package:jh_mobile/views/_views_lib.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -14,7 +14,7 @@ class App extends StatelessWidget {
           child: child!,
         );
       },
-      home: Login(),
+      home: HomeView(),
     );
   }
 }
