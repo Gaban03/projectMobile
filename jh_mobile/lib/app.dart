@@ -14,7 +14,7 @@ class App extends StatelessWidget {
           child: child!,
         );
       },
-      home: HomeView(),
+      home: Login(),
     );
   }
 }

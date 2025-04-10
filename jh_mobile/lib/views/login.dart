@@ -120,9 +120,16 @@ class _LoginState extends State<Login> {
                           color: Colors.redAccent,
                         ),
                         child: TextButton(
-                          onPressed: () {
+                          onPressed: () async{
                             if (formKey.currentState!.validate()) {
                               //Funcao de login
+                              await AuthService().signin(
+                                // email: _emailController.text,
+                                // password: _passwordController.text,
+                                email: userName.text,
+                                password: userPassword.text,
+                                context: context
+                              );
                             }
                           },
                           child: Text(
