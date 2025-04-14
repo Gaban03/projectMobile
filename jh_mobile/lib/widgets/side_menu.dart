@@ -1,8 +1,10 @@
 part of '_widgets_lib.dart';
 
+final User? user = AuthService().currentUser;
+
 class SideMenu extends StatelessWidget {
   const SideMenu({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -32,60 +34,73 @@ class SideMenu extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Logado como:",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold
-                            ),
+                          StreamBuilder<User?>(
+                            stream: FirebaseAuth.instance.authStateChanges(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const Text(
+                                  "Carregando...",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
+                              } else if (snapshot.hasData && snapshot.data != null) {
+                                final user = snapshot.data!;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Logado como:",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                        user.email ?? "Sem e-mail",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                    SizedBox(
+                                      height: 30,
+                                    ),
+                                    Text(
+                                      "Último login registrado:",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      user.metadata.lastSignInTime != null
+                                      ? DateFormat('dd/MM/yyyy  HH:mm').format(user.metadata.lastSignInTime!.toLocal()): "Desconhecido",
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return const Text(
+                                  "Nenhum usuário logado",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
+                              }
+                            },
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "",
-                                //ViewModelBase.appUser?.login ?? "?",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "Último login registrado:",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold
-                            ),
-                          ),
-                          /*Text(
-                            ViewModelBase.appUser?.lastAuth != null
-                                ? AppCommons.dateToFormattedString(
-                                    dt: ViewModelBase.appUser!.lastAuth!)
-                                : "?",
-                            style: TextStyle(
-                              fontSize: AppConstants.szFonteMuitoPeq,
-                              color: Colors.white,
-                            ),
-                          ),*/
+                          SizedBox(height: 20,),
                         ],
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          if (Scaffold.of(context).hasDrawer) {
-                            Scaffold.of(context).closeDrawer();
-                          }
-                        },
-                        icon: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 40,
-                        ),
-                        padding: EdgeInsets.zero,
                       ),
                     ],
                   ),
@@ -173,6 +188,17 @@ class SideMenu extends StatelessWidget {
                       color: Colors.red,
                     ),
                   ),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+
+                    await FirebaseAuth.instance.signOut();
+
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const Login()
+                      )
+                    );
+                  },
                 ),
               ],
             ),

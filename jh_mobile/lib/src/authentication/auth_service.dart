@@ -5,6 +5,11 @@ import 'package:jh_mobile/views/_views_lib.dart';
 
 class AuthService {
 
+  // Função para pegar o atual usuario logado
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  User? get currentUser => _firebaseAuth.currentUser;
+  Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+
   // Metodo de login
   Future<void> signin({
     required String email,
@@ -13,12 +18,12 @@ class AuthService {
   }) async {
 
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        await _firebaseAuth.signInWithEmailAndPassword(
           email: email,
           password: password
         );
 
-        await Future.delayed(const Duration(seconds: 1));
+        await Future.delayed(const Duration(milliseconds: 500));
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -27,7 +32,7 @@ class AuthService {
         );
       } on FirebaseAuthException catch(e){
         String message = '';
-        if (e.code == 'user-not-found'){
+        if (e.code == 'invalid-email'){
           message = 'Nenhum usuario encontrado com esse email.';
         } else if(e.code == 'wrong-password'){
           message = 'Senha incorreta';
@@ -51,8 +56,8 @@ class AuthService {
     required BuildContext context
   }) async {
 
-    await FirebaseAuth.instance.signOut();
-    await Future.delayed(const Duration(seconds: 1));
+    await _firebaseAuth.signOut();
+    await Future.delayed(const Duration(milliseconds: 500));
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -60,5 +65,4 @@ class AuthService {
       )
     );
   }
-
 }
