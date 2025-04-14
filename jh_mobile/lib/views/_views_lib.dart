@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../firebase_options.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:jh_mobile/src/authentication/wrapper.dart';
 
 part 'home_view.dart';
 part 'login.dart';
