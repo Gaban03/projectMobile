@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:jh_mobile/views/_views_lib.dart';
 
 class AuthService {
@@ -9,6 +10,7 @@ class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   User? get currentUser => _firebaseAuth.currentUser;
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // Metodo de login
   Future<void> signin({
@@ -51,18 +53,83 @@ class AuthService {
       }
   }
 
-  // Metodo de deslogar
-  Future<void> signout({
-    required BuildContext context
+  Future<void> signinWithProvider({
+    required BuildContext context,
   }) async {
+    try {
+      final provider = OAuthProvider("microsoft.com");
+      provider.setCustomParameters({
+        "tenant": "25427393-5ef7-4137-b86b-b7a572e91aa1"
+      });
 
-    await _firebaseAuth.signOut();
-    await Future.delayed(const Duration(milliseconds: 500));
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => Login()
-      )
-    );
+      final UserCredential credential = await _firebaseAuth.signInWithProvider(provider);
+      if (credential.user != null) {
+      }
+      await Future.delayed(const Duration(milliseconds: 500));
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => const HomeView()
+          )
+      );
+    } catch (e) {
+      debugPrint("Erro ao fazer login com provedor: $e");
+      Fluttertoast.showToast(
+        msg: "Erro ao tentar fazer login. Tente novamente.",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 14.0,
+      );
+    }
+  }
+
+  Future<void> loginWithGoogle({
+    required BuildContext context,
+}) async {
+    try {
+      GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+      AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      debugPrint("Erro ao fazer login com provedor: $e");
+      Fluttertoast.showToast(
+        msg: "Erro ao tentar fazer login. Tente novamente.",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black54,
+        textColor: Colors.white,
+        fontSize: 14.0,
+      );
+    }
+  }
+
+  // Metodo de deslogar
+  Future<void> signout({required BuildContext context}) async {
+    try {
+      await _firebaseAuth.signOut();
+      await _googleSignIn.signOut();
+
+      // Espera só pra garantir limpeza
+      await Future.delayed(Duration(milliseconds: 300));
+
+      // Garante que a troca de tela não vai quebrar com rebuilds pendentes
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const Login()),
+              (route) => false,
+        );
+      });
+    } catch (e) {
+      debugPrint("Erro ao deslogar: $e");
+    }
   }
 }

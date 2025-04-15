@@ -48,6 +48,13 @@ class SideMenu extends StatelessWidget {
                                 );
                               } else if (snapshot.hasData && snapshot.data != null) {
                                 final user = snapshot.data!;
+                                String limparEmail(String? email) {
+                                  if (email == null) return "";
+                                  if (email.contains("#ext#@")) {
+                                    return email.split("#ext#@").first.replaceAll("_", "@");
+                                  }
+                                  return email;
+                                }
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -59,15 +66,16 @@ class SideMenu extends StatelessWidget {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
+
                                     Text(
-                                        user.email ?? "Sem e-mail",
+                                        limparEmail(user.email),
                                           style: TextStyle(
                                             fontSize: 18,
                                             color: Colors.white,
                                           ),
                                         ),
                                     SizedBox(
-                                      height: 30,
+                                      height: 40,
                                     ),
                                     Text(
                                       "Último login registrado:",
@@ -191,7 +199,7 @@ class SideMenu extends StatelessWidget {
                   onTap: () async {
                     Navigator.of(context).pop();
 
-                    await FirebaseAuth.instance.signOut();
+                    await AuthService().signout(context: context);
 
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(

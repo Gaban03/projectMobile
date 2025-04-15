@@ -28,20 +28,19 @@ Widget build(BuildContext context) {
     body: GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: SafeArea(
-        child: SingleChildScrollView( // Aqui! Envolve TUDO!
+        child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 40),
+            padding: const EdgeInsets.only(bottom: 10),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(height: 140),
                 Image.asset("assets/images/senai.png", width: 300),
-                SizedBox(height: 15),
+                SizedBox(height: 10),
                 Text(
                   "Monitoramento Compressor",
                   style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Form(
@@ -138,8 +137,6 @@ Widget build(BuildContext context) {
                             ),
                           ),
                         ),
-
-                        SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -155,6 +152,18 @@ Widget build(BuildContext context) {
                             ),
                           ],
                         ),
+                              ElevatedButton.icon(onPressed: () async{
+                                  await AuthService().signinWithProvider(context: context);
+                              },
+                              icon: const Icon(FontAwesomeIcons.microsoft),
+                              label: const Text("Entrar com Microsoft", style: TextStyle(color: Colors.black)),
+                              ),
+                              ElevatedButton.icon(onPressed: () async{
+                                await AuthService().loginWithGoogle(context: context);
+                              },
+                                icon: const Icon(FontAwesomeIcons.google),
+                                label: const Text("Entrar com Google", style: TextStyle(color: Colors.black)),
+                              ),
                       ],
                     ),
                   ),
