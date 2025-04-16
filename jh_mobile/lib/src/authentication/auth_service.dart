@@ -53,7 +53,7 @@ class AuthService {
       }
   }
 
-  Future<void> signinWithProvider({
+  Future<void> signInWithMicrosoft({
     required BuildContext context,
   }) async {
     try {
@@ -62,16 +62,16 @@ class AuthService {
         "tenant": "25427393-5ef7-4137-b86b-b7a572e91aa1"
       });
 
-      final UserCredential credential = await _firebaseAuth.signInWithProvider(provider);
+      final credential = await _firebaseAuth.signInWithProvider(provider);
       if (credential.user != null) {
+        await Future.delayed(const Duration(milliseconds: 500));
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => const HomeView()
+            )
+        );
       }
-      await Future.delayed(const Duration(milliseconds: 500));
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => const HomeView()
-          )
-      );
     } catch (e) {
       debugPrint("Erro ao fazer login com provedor: $e");
       Fluttertoast.showToast(
@@ -120,14 +120,9 @@ class AuthService {
       // Espera só pra garantir limpeza
       await Future.delayed(Duration(milliseconds: 300));
 
-      // Garante que a troca de tela não vai quebrar com rebuilds pendentes
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => const Login()),
-              (route) => false,
+      MaterialPageRoute(
+            builder: (BuildContext context) => Login()
         );
-      });
     } catch (e) {
       debugPrint("Erro ao deslogar: $e");
     }

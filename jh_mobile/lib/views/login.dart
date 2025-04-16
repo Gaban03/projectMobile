@@ -153,7 +153,7 @@ Widget build(BuildContext context) {
                           ],
                         ),
                               ElevatedButton.icon(onPressed: () async{
-                                  await AuthService().signinWithProvider(context: context);
+                                  await AuthService().signInWithMicrosoft(context: context);
                               },
                               icon: const Icon(FontAwesomeIcons.microsoft),
                               label: const Text("Entrar com Microsoft", style: TextStyle(color: Colors.black)),
