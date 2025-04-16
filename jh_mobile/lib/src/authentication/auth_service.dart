@@ -53,37 +53,41 @@ class AuthService {
       }
   }
 
-  Future<void> signInWithMicrosoft({
-    required BuildContext context,
-  }) async {
-    try {
-      final provider = OAuthProvider("microsoft.com");
-      provider.setCustomParameters({
-        "tenant": "25427393-5ef7-4137-b86b-b7a572e91aa1"
-      });
+  /*
+  Login com microsoft:
+  */
 
-      final credential = await _firebaseAuth.signInWithProvider(provider);
-      if (credential.user != null) {
-        await Future.delayed(const Duration(milliseconds: 500));
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => const HomeView()
-            )
-        );
-      }
-    } catch (e) {
-      debugPrint("Erro ao fazer login com provedor: $e");
-      Fluttertoast.showToast(
-        msg: "Erro ao tentar fazer login. Tente novamente.",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 14.0,
-      );
-    }
-  }
+  // Future<void> signInWithMicrosoft({
+  //   required BuildContext context,
+  // }) async {
+  //   try {
+  //     final provider = OAuthProvider("microsoft.com");
+  //     provider.setCustomParameters({
+  //       "tenant": "25427393-5ef7-4137-b86b-b7a572e91aa1"
+  //     });
+
+  //     final credential = await _firebaseAuth.signInWithProvider(provider);
+  //     if (credential.user != null) {
+  //       await Future.delayed(const Duration(milliseconds: 500));
+  //       Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(
+  //               builder: (BuildContext context) => const HomeView()
+  //           )
+  //       );
+  //     }
+  //   } catch (e) {
+  //     debugPrint("Erro ao fazer login com provedor: $e");
+  //     Fluttertoast.showToast(
+  //       msg: "Erro ao tentar fazer login. Tente novamente.",
+  //       toastLength: Toast.LENGTH_LONG,
+  //       gravity: ToastGravity.BOTTOM,
+  //       backgroundColor: Colors.black54,
+  //       textColor: Colors.white,
+  //       fontSize: 14.0,
+  //     );
+  //   }
+  // }
 
   Future<void> loginWithGoogle({
     required BuildContext context,
