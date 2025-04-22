@@ -8,7 +8,7 @@ plugins {
 android {
     signingConfigs {
         create("release") {
-            storeFile = file("release-key.jks")
+            storeFile = file("release.keystore")
             storePassword = "senha123"
             keyAlias = "release_alias"
             keyPassword = "senha123"
@@ -18,7 +18,7 @@ android {
             * keytool -genkey -v -keystore release.keystore -alias release_alias -keyalg RSA -keysize 2048 -validity 10000
             *
             * pegar o SHA-1
-            * keytool -list -v -keystore android/app/release.keystore -alias release-alias
+            * keytool -list -v -keystore android/app/release.keystore -alias release_alias
             * */
         }
     }
