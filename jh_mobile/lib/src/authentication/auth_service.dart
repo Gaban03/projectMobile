@@ -104,14 +104,30 @@ class AuthService {
       await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e) {
       debugPrint("Erro ao fazer login com provedor: $e");
-      Fluttertoast.showToast(
-        msg: "Erro ao tentar fazer login. Tente novamente.",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 14.0,
-      );
+      await _firebaseAuth.signOut();
+      await _googleSignIn.signOut();
+      if (e is FirebaseAuthException){
+          if(e.code == 'admin-restricted-operation'){
+            Fluttertoast.showToast(
+              msg: "Você não tem permissão para acessar o aplicativo, fale com um administrador",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.black54,
+              textColor: Colors.white,
+              fontSize: 14.0,
+            );
+          }
+      }else {
+        Fluttertoast.showToast(
+          msg: "Erro ao tentar fazer login com o gmail. Tente novamente.",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.black54,
+          textColor: Colors.white,
+          fontSize: 14.0,
+        );
+      }
+
     }
   }
 

@@ -1,3 +1,7 @@
+def MY_KEYSTORE_PASSWORD = project.hasProperty('MY_KEYSTORE_PASSWORD') ? project.MY_KEYSTORE_PASSWORD : ""
+def MY_KEY_PASSWORD = project.hasProperty('MY_KEY_PASSWORD') ? project.MY_KEY_PASSWORD : ""
+
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -8,10 +12,18 @@ plugins {
 android {
     signingConfigs {
         create("release") {
-            storeFile = file("C:/Users/Murilo/Desktop/projectMobile/jh_mobile/android/app/release-key.jks")
-            storePassword = "MuriloLindo"
+            storeFile = file("release-key.jks")
+            storePassword = MY_KEYSTORE_PASSWORD
             keyAlias = "release_alias"
-            keyPassword = "MuriloLindo"
+            keyPassword = MY_KEY_PASSWORD
+
+            /*
+            * gerar release-key
+            * keytool -genkey -v -keystore release.keystore -alias release_alias -keyalg RSA -keysize 2048 -validity 10000
+            *
+            * pegar o SHA-1
+            * keytool -list -v -keystore android/app/release.keystore -alias release-alias
+            * */
         }
     }
 
