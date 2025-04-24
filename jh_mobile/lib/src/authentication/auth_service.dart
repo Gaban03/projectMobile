@@ -1,8 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:jh_mobile/views/_views_lib.dart';
+part of '_authentication_lib.dart';
 
 class AuthService {
 
@@ -26,12 +22,14 @@ class AuthService {
         );
 
         await Future.delayed(const Duration(milliseconds: 500));
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => const HomeView()
-          )
-        );
+        if (context.mounted){
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => const HomeView()
+              )
+          );
+        }
       } on FirebaseAuthException catch(e){
         String message = '';
         if (e.code == 'invalid-email'){
@@ -140,9 +138,14 @@ class AuthService {
       // Espera só pra garantir limpeza
       await Future.delayed(Duration(milliseconds: 300));
 
-      MaterialPageRoute(
+      if (context.mounted){
+        Navigator.pushReplacement(
+            context,
+        MaterialPageRoute(
             builder: (BuildContext context) => Login()
+          )
         );
+      }
     } catch (e) {
       debugPrint("Erro ao deslogar: $e");
     }

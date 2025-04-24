@@ -201,11 +201,13 @@ class SideMenu extends StatelessWidget {
 
                     await AuthService().signout(context: context);
 
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const Login()
-                      )
-                    );
+                    if(context.mounted){
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                              builder: (context) => const Login()
+                          )
+                      );
+                    }
                   },
                 ),
               ],
