@@ -22,6 +22,7 @@ class AuthService {
         );
 
         await Future.delayed(const Duration(milliseconds: 500));
+
         if (context.mounted){
           Navigator.pushReplacement(
               context,
@@ -91,6 +92,11 @@ class AuthService {
     required BuildContext context,
 }) async {
     try {
+      await FirebaseAuth.instance.signOut();
+      await _googleSignIn.signOut();
+
+      await Future.delayed(const Duration(milliseconds: 500));
+
       GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
       GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
@@ -100,6 +106,18 @@ class AuthService {
         idToken: googleAuth?.idToken
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
+
+      if (_firebaseAuth.currentUser != null) {
+        if (context.mounted) {
+          // Redireciona para a HomeView e remove a tela de login
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const HomeView(),
+            ),
+          );
+        }
+      }
     } catch (e) {
       debugPrint("Erro ao fazer login com provedor: $e");
       await _firebaseAuth.signOut();
@@ -135,15 +153,9 @@ class AuthService {
       await _firebaseAuth.signOut();
       await _googleSignIn.signOut();
 
-      // Espera só pra garantir limpeza
-      await Future.delayed(Duration(milliseconds: 300));
-
-      if (context.mounted){
-        Navigator.pushReplacement(
-            context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => Login()
-          )
+      if (context.mounted) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) => const Login()),
         );
       }
     } catch (e) {

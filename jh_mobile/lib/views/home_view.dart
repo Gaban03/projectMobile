@@ -42,7 +42,13 @@ class _HomeViewState extends State<HomeView> {
                 subtitle: "Todas as emergências emitidas",
                 icon: Icons.emergency,
                 onPressed: () async {
-                  await Container();
+                  if(context.mounted){
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const EmergencyHistory()
+                        )
+                    );
+                  }
                 },
               ),
               HomeMenuItem(
@@ -50,7 +56,13 @@ class _HomeViewState extends State<HomeView> {
                 subtitle: "Dados de temperatura do compressor",
                 icon: Icons.list,
                 onPressed: () async {
-                  await Container();
+                  if(context.mounted){
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const Temperature()
+                        )
+                    );
+                  }
                 },
               ),
               HomeMenuItem(
@@ -58,7 +70,13 @@ class _HomeViewState extends State<HomeView> {
                 subtitle: "Liga e desliga o compressor",
                 icon: Icons.control_point_rounded,
                 onPressed: () async {
-                  await Container();
+                  if(context.mounted){
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const CompressorControl()
+                        )
+                    );
+                  }
                 },
               ),    
             ],
