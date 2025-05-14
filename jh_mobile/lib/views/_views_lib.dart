@@ -10,9 +10,12 @@ import '../widgets/_widgets_lib.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:graphic/graphic.dart';
+import 'dart:async';
+import 'package:intl/intl.dart';
 
 part 'home_view.dart';
 part 'login.dart';
 part 'temperature.dart';
 part 'emergency_history.dart';
 part 'compressor_control.dart';
+part 'about.dart';
