@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 
 
 import 'package:jh_mobile/src/authentication/_authentication_lib.dart';
+import 'package:jh_mobile/src/http/htpp_lib.dart';
 import '../widgets/_widgets_lib.dart';
+import 'dart:convert';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:graphic/graphic.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 

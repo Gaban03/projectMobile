@@ -32,10 +32,10 @@ class _TemperatureState extends State<Temperature> {
             horizontal: 20,
               ),
               child: Center(
-                  child: Text("Pagina de Temperatura")),
+                  child: Text("Teste"),
             )
         )
       ),
-    );
+    ));
   }
 }

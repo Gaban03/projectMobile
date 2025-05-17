@@ -169,7 +169,7 @@ class SideMenu extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (ctx) {
-                        return Container();
+                        return About();
                       }),
                     );
                   },
