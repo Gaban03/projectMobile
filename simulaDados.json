@@ -1,0 +1,23 @@
+[
+    {
+        "id": "39c0229a238c32d2",
+        "type": "function",
+        "z": "dbd4c687880cfb82",
+        "name": "Gera dados",
+        "func": "const agora = new Date();\n\nmsg.payload = {\n    dataHora: agora.toLocaleDateString() + ' ' + agora.toLocaleTimeString(),\n    temperatura: Math.floor(Math.random() * 50)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 200,
+        "wires": [
+            [
+                "9769ca470fa76517",
+                "22fef971c010b3b9"
+            ]
+        ]
+    }
+]
