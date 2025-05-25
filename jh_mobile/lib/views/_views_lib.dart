@@ -15,6 +15,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'home_view.dart';
 part 'login.dart';
@@ -22,3 +23,5 @@ part 'temperature.dart';
 part 'emergency_history.dart';
 part 'compressor_control.dart';
 part 'about.dart';
+part 'config_ip.dart';
+part 'config.dart';

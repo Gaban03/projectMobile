@@ -1,0 +1,288 @@
+[
+    {
+        "id": "2dfbcaca9b8949e2",
+        "type": "tab",
+        "label": "simulaDados",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4e197cfa5cae2c13",
+        "type": "http in",
+        "z": "2dfbcaca9b8949e2",
+        "name": "",
+        "url": "/modbus",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 280,
+        "y": 180,
+        "wires": [
+            [
+                "781e22e8553833c2",
+                "f3e1e7ea05801a35"
+            ]
+        ]
+    },
+    {
+        "id": "781e22e8553833c2",
+        "type": "debug",
+        "z": "2dfbcaca9b8949e2",
+        "name": "Post",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "11db2840f4dd5120",
+        "type": "http response",
+        "z": "2dfbcaca9b8949e2",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 710,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "2b5db17f61d583c1",
+        "type": "http in",
+        "z": "2dfbcaca9b8949e2",
+        "name": "",
+        "url": "/dados",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 320,
+        "wires": [
+            [
+                "b3603be98949abb3"
+            ]
+        ]
+    },
+    {
+        "id": "b3603be98949abb3",
+        "type": "function",
+        "z": "2dfbcaca9b8949e2",
+        "name": "recebe  dadosdo modbus",
+        "func": "let dados = flow.get(\"dados_bobina\") || {};\nmsg.payload = dados;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 320,
+        "wires": [
+            [
+                "c8a0cdf5b183a28a"
+            ]
+        ]
+    },
+    {
+        "id": "c8a0cdf5b183a28a",
+        "type": "http response",
+        "z": "2dfbcaca9b8949e2",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 730,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "8d2b299b29336657",
+        "type": "http in",
+        "z": "2dfbcaca9b8949e2",
+        "name": "",
+        "url": "/estadoBobina",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 210,
+        "y": 460,
+        "wires": [
+            [
+                "e3833340137bba71"
+            ]
+        ]
+    },
+    {
+        "id": "4304038ab72d738d",
+        "type": "http in",
+        "z": "2dfbcaca9b8949e2",
+        "name": "",
+        "url": "/bobina",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 270,
+        "y": 560,
+        "wires": [
+            [
+                "85c7a351ab0dac2b"
+            ]
+        ]
+    },
+    {
+        "id": "917a38a00d8376f9",
+        "type": "http response",
+        "z": "2dfbcaca9b8949e2",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 670,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "5e2cdb8fcb1db95a",
+        "type": "http response",
+        "z": "2dfbcaca9b8949e2",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 610,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "e3833340137bba71",
+        "type": "function",
+        "z": "2dfbcaca9b8949e2",
+        "name": "function 2",
+        "func": "if (msg.payload.bobina !== undefined) {\n    flow.set(\"estado_bobina\", msg.payload.bobina); // salva no contexto\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 460,
+        "wires": [
+            [
+                "5e2cdb8fcb1db95a"
+            ]
+        ]
+    },
+    {
+        "id": "85c7a351ab0dac2b",
+        "type": "function",
+        "z": "2dfbcaca9b8949e2",
+        "name": "function 3",
+        "func": "let bobina = flow.get(\"estado_bobina\") || false;\n\nmsg.payload = {\n    bobina: bobina\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 560,
+        "wires": [
+            [
+                "917a38a00d8376f9",
+                "65046ec53b362471"
+            ]
+        ]
+    },
+    {
+        "id": "65046ec53b362471",
+        "type": "debug",
+        "z": "2dfbcaca9b8949e2",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "6e15d69c7eef049a",
+        "type": "mqtt out",
+        "z": "2dfbcaca9b8949e2",
+        "name": "",
+        "topic": "Compressor",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "94b53afc6b7d8551",
+        "x": 190,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "f3e1e7ea05801a35",
+        "type": "function",
+        "z": "2dfbcaca9b8949e2",
+        "name": "trata dados do modbus",
+        "func": "flow.set(\"dados_bobina\", msg.payload);\nmsg.payload = { status: \"ok\", mensagem: \"Dados salvos com sucesso\" };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 180,
+        "wires": [
+            [
+                "11db2840f4dd5120"
+            ]
+        ]
+    },
+    {
+        "id": "94b53afc6b7d8551",
+        "type": "mqtt-broker",
+        "name": "HiveMQ",
+        "broker": "b29f84b0972441899ce848b7b2a4dbda.s1.eu.hivemq.cloud",
+        "port": "8883",
+        "tls": "",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

@@ -1,9 +1,21 @@
 part of 'htpp_lib.dart';
 
+Future<String> getIp() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('ip') ?? '';
+}
+
+Future<String> getPort() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('port') ?? '1880';
+}
+
 Future<Map<String, dynamic>> fetchDados() async {
   try {
-    // IP da maquina na qual esta rodando o node-red
-    final response = await http.get(Uri.parse('http://10.110.12.44:1880/dados'));
+    final ip = await getIp();
+    final port = await getPort();
+
+    final response = await http.get(Uri.parse('http://$ip:$port/dados'));
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
     } else {
@@ -11,5 +23,43 @@ Future<Map<String, dynamic>> fetchDados() async {
     }
   } catch (e) {
     throw Exception('Erro na requisição: $e');
+  }
+}
+
+Future<bool> recebeEstado() async {
+  final ip = await getIp();
+  final port = await getPort();
+
+  try {
+    final response = await http.get(Uri.parse('http://$ip:$port/bobina'));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['bobina'] as bool;
+    } else {
+      throw Exception('Erro ao carregar estado: ${response.statusCode}');
+    }
+  } catch (e) {
+    throw Exception('Erro na requisição: $e');
+  }
+}
+
+Future<void> enviarEstado(bool estado) async {
+  final ip = await getIp();
+  final port = await getPort();
+
+  try {
+    final url = Uri.parse('http://$ip:$port/estadoBobina');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'bobina': estado}),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Erro ao enviar estado: ${response.statusCode}');
+    }
+  } catch (e) {
+    throw Exception('Erro na requisição POST: $e');
   }
 }
