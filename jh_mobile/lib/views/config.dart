@@ -17,7 +17,7 @@ class _ConfigPageState extends State<ConfigPage> {
             children: [
             ListTile(
             leading: const Icon(Icons.settings_ethernet),
-            title: const Text("Configurar IP e Porta", style: TextStyle(fontSize: 25,),),
+            title: const Text("Configurar IP", style: TextStyle(fontSize: 25,),),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () {
               Navigator.push(
