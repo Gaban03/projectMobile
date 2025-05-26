@@ -6,6 +6,7 @@ import 'package:jh_mobile/src/authentication/_authentication_lib.dart';
 import 'package:jh_mobile/views/_views_lib.dart';
 
 part 'home_menu_item.dart';
+part 'stat_card.dart';
 part 'custom_app_bar.dart';
 part 'side_menu.dart';
 part 'content.dart';

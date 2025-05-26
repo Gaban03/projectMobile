@@ -4,7 +4,7 @@ final User? user = AuthService().currentUser;
 
 class SideMenu extends StatelessWidget {
   const SideMenu({super.key});
-  
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -37,7 +37,8 @@ class SideMenu extends StatelessWidget {
                           StreamBuilder<User?>(
                             stream: FirebaseAuth.instance.authStateChanges(),
                             builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
                                 return const Text(
                                   "Carregando...",
                                   style: TextStyle(
@@ -46,15 +47,20 @@ class SideMenu extends StatelessWidget {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 );
-                              } else if (snapshot.hasData && snapshot.data != null) {
+                              } else if (snapshot.hasData &&
+                                  snapshot.data != null) {
                                 final user = snapshot.data!;
                                 String limparEmail(String? email) {
                                   if (email == null) return "";
                                   if (email.contains("#ext#@")) {
-                                    return email.split("#ext#@").first.replaceAll("_", "@");
+                                    return email
+                                        .split("#ext#@")
+                                        .first
+                                        .replaceAll("_", "@");
                                   }
                                   return email;
                                 }
+
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -66,14 +72,13 @@ class SideMenu extends StatelessWidget {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-
                                     Text(
-                                        limparEmail(user.email),
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.white,
-                                          ),
-                                        ),
+                                      limparEmail(user.email),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                     SizedBox(
                                       height: 40,
                                     ),
@@ -87,7 +92,11 @@ class SideMenu extends StatelessWidget {
                                     ),
                                     Text(
                                       user.metadata.lastSignInTime != null
-                                      ? DateFormat('dd/MM/yyyy  HH:mm').format(user.metadata.lastSignInTime!.toLocal()): "Desconhecido",
+                                          ? DateFormat('dd/MM/yyyy  HH:mm')
+                                              .format(user
+                                                  .metadata.lastSignInTime!
+                                                  .toLocal())
+                                          : "Desconhecido",
                                       style: TextStyle(
                                         fontSize: 17,
                                         color: Colors.white,
@@ -107,7 +116,9 @@ class SideMenu extends StatelessWidget {
                               }
                             },
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 20,
+                          ),
                         ],
                       ),
                     ],
@@ -123,6 +134,7 @@ class SideMenu extends StatelessWidget {
                   leading: const Icon(Icons.home_outlined),
                   title: const Text("Início"),
                   onTap: () {
+                    Navigator.of(context).pop();
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (ctx) {
                         return const HomeView();
@@ -145,9 +157,10 @@ class SideMenu extends StatelessWidget {
                   leading: const Icon(Icons.settings_outlined),
                   title: const Text("Configurações"),
                   onTap: () {
+                    Navigator.of(context).pop();
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (ctx) {
-                        return Container();
+                        return ConfigView();
                       }),
                     );
                   },
@@ -167,6 +180,7 @@ class SideMenu extends StatelessWidget {
                   leading: const Icon(Icons.info_outline),
                   title: const Text("Sobre"),
                   onTap: () {
+                    Navigator.of(context).pop();
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (ctx) {
                         return About();
@@ -201,12 +215,9 @@ class SideMenu extends StatelessWidget {
 
                     await AuthService().signout(context: context);
 
-                    if(context.mounted){
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(
-                              builder: (context) => const Login()
-                          )
-                      );
+                    if (context.mounted) {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => const Login()));
                     }
                   },
                 ),

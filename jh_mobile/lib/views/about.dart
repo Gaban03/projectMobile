@@ -72,7 +72,7 @@ class _AboutState extends State<About> {
   }
 
   Widget _buildResponsavelCard(String nome, String cargo, String email, String telefone) {
-    return Container(
+    return SizedBox(
       width: 700,
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),

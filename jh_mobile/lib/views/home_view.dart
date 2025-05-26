@@ -42,25 +42,24 @@ class _HomeViewState extends State<HomeView> {
                 subtitle: "Todas as emergências emitidas",
                 icon: Icons.emergency,
                 onPressed: () async {
-                  if(context.mounted){
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => const EmergencyHistory()
-                        )
-                    );
+                  if (context.mounted) {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const EmergencyHistory()));
                   }
                 },
               ),
               HomeMenuItem(
-                title: "Gráfico de temperatura",
-                subtitle: "Dados de temperatura do compressor",
+                title: "Monitoramento compressor",
+                subtitle:
+                    "Dados de temperatura, umidade e pressão do compressor",
                 icon: Icons.list,
                 onPressed: () async {
-                  if(context.mounted){
+                  if (context.mounted) {
                     Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => const Temperature()
-                        )
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const MonitoramentoCompressorPage(),
+                      ),
                     );
                   }
                 },
@@ -70,15 +69,12 @@ class _HomeViewState extends State<HomeView> {
                 subtitle: "Liga e desliga o compressor",
                 icon: Icons.control_point_rounded,
                 onPressed: () async {
-                  if(context.mounted){
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => const CompressorControl()
-                        )
-                    );
+                  if (context.mounted) {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const CompressorControl()));
                   }
                 },
-              ),    
+              ),
             ],
           ),
         ),

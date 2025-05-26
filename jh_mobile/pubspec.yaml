@@ -18,6 +18,12 @@ dependencies:
   font_awesome_flutter: ^10.8.0
   google_sign_in: ^6.3.0
   http: ^1.3.0
+  salomon_bottom_bar: ^3.3.1
+  convex_bottom_bar: ^3.0.0
+  syncfusion_flutter_gauges: ^29.2.5
+  sqflite: ^2.0.3
+  get_it: ^8.0.3
+  path_provider: ^2.0.11
   fl_chart: ^0.65.0
   mqtt_client: ^10.8.0
 

@@ -1,0 +1,23 @@
+[
+    {
+        "id": "a2",
+        "type": "function",
+        "z": "284784f357a1b4f2",
+        "name": "Gerar dados simulados",
+        "func": "// Simula dados de sensores\nmsg.payload = {\n    temperatura: (30 + Math.random() * 10).toFixed(2),\n    umidade: (40 + Math.random() * 20).toFixed(2),\n    pressao: (1000 + Math.random() * 30).toFixed(2),\n    dataHora: new Date().toLocaleString()\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 240,
+        "wires": [
+            [
+                "a3",
+                "c6b5d22ada25eaac"
+            ]
+        ]
+    }
+]

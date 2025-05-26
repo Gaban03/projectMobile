@@ -1,19 +1,19 @@
 part of '_views_lib.dart';
 
-class Temperature extends StatefulWidget {
-  const Temperature({super.key});
+class Pressure extends StatefulWidget {
+  const Pressure({super.key});
 
   @override
-  State<Temperature> createState() => _TemperatureState();
+  State<Pressure> createState() => _PressureState();
 }
 
-class _TemperatureState extends State<Temperature> {
+class _PressureState extends State<Pressure> {
   static const int maxPoints = 5;
 
-  List<FlSpot> temperaturaSpots = [];
+  List<FlSpot> pressaoSpots = [];
   List<String> labels = [];
 
-  double temperaturaAtual = 0;
+  double pressaoAtual = 1013;
   String dataHora = '';
   Timer? timer;
   double tempo = 0;
@@ -21,26 +21,26 @@ class _TemperatureState extends State<Temperature> {
   Future<void> atualizarDados() async {
     try {
       final data = await fetchDados();
-      double temp = double.tryParse(data['temperatura'].toString()) ?? 0;
+      double press = double.tryParse(data['pressao'].toString()) ?? 1013;
       String dataHoraRecebida = data['dataHora'] ?? '';
 
-      if (!temp.isFinite) throw Exception('Temperatura inválida');
+      if (!press.isFinite) throw Exception('Pressão inválida');
 
       setState(() {
-        temperaturaAtual = temp;
+        pressaoAtual = press;
         dataHora = dataHoraRecebida;
         tempo += 1;
-        temperaturaSpots.add(FlSpot(tempo, temperaturaAtual));
+        pressaoSpots.add(FlSpot(tempo, pressaoAtual));
         labels
             .add(dataHora.length >= 19 ? dataHora.substring(11, 19) : dataHora);
 
-        if (temperaturaSpots.length > maxPoints) {
-          temperaturaSpots.removeAt(0);
+        if (pressaoSpots.length > maxPoints) {
+          pressaoSpots.removeAt(0);
           labels.removeAt(0);
         }
       });
     } catch (e) {
-      debugPrint('Erro ao atualizar dados: $e');
+      debugPrint('Erro ao atualizar dados de pressão: $e');
     }
   }
 
@@ -57,24 +57,34 @@ class _TemperatureState extends State<Temperature> {
     super.dispose();
   }
 
+  Color get ponteiroColor {
+    if (pressaoAtual < 990) {
+      return Colors.orange;
+    } else if (pressaoAtual <= 1020) {
+      return Colors.green;
+    } else {
+      return Colors.red;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final fontSize = screenWidth < 400 ? 11.0 : 13.0;
 
-    if (temperaturaSpots.isEmpty) {
+    if (pressaoSpots.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    final double minX = temperaturaSpots.first.x;
-    final double maxX = temperaturaSpots.last.x;
+    final double minX = pressaoSpots.first.x;
+    final double maxX = pressaoSpots.last.x;
 
-    final minTemp =
-        temperaturaSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b);
-    final maxTemp =
-        temperaturaSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b);
-    final avgTemp = temperaturaSpots.map((e) => e.y).reduce((a, b) => a + b) /
-        temperaturaSpots.length;
+    final minPressao =
+        pressaoSpots.map((e) => e.y).reduce((a, b) => a < b ? a : b);
+    final maxPressao =
+        pressaoSpots.map((e) => e.y).reduce((a, b) => a > b ? a : b);
+    final avgPressao = pressaoSpots.map((e) => e.y).reduce((a, b) => a + b) /
+        pressaoSpots.length;
 
     return Scaffold(
       body: Content(
@@ -99,11 +109,12 @@ class _TemperatureState extends State<Temperature> {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.thermostat,
-                                color: Colors.redAccent, size: 30),
+                            Icon(Icons.speed,
+                                color: const Color.fromARGB(255, 196, 68, 255),
+                                size: 30),
                             const SizedBox(width: 8),
                             Text(
-                              'Temp. Atual',
+                              'Pressão Atual',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
@@ -124,49 +135,86 @@ class _TemperatureState extends State<Temperature> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 14, horizontal: 32),
                       decoration: BoxDecoration(
-                        color: Colors.red.shade50,
+                        color: Colors.purple.shade50,
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.redAccent.withOpacity(0.2),
+                            color: const Color.fromARGB(255, 196, 68, 255)
+                                .withOpacity(0.2),
                             blurRadius: 8,
                             offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: Text(
-                        '${temperaturaAtual.toStringAsFixed(2)} °C',
+                        '${pressaoAtual.toStringAsFixed(1)} hPa',
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: Colors.redAccent.shade700,
+                          color: const Color.fromARGB(255, 196, 68, 255),
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 24),
+                    SfRadialGauge(
+                      axes: <RadialAxis>[
+                        RadialAxis(
+                          minimum: 950,
+                          maximum: 1050,
+                          ranges: <GaugeRange>[
+                            GaugeRange(
+                                startValue: 950,
+                                endValue: 990,
+                                color: Colors.orange),
+                            GaugeRange(
+                                startValue: 990,
+                                endValue: 1020,
+                                color: Colors.green),
+                            GaugeRange(
+                                startValue: 1020,
+                                endValue: 1050,
+                                color: Colors.red),
+                          ],
+                          pointers: <GaugePointer>[
+                            NeedlePointer(
+                                value: pressaoAtual,
+                                needleColor: ponteiroColor),
+                          ],
+                          annotations: <GaugeAnnotation>[
+                            GaugeAnnotation(
+                              widget: Text(
+                                '${pressaoAtual.toStringAsFixed(1)} hPa',
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              angle: 90,
+                              positionFactor: 0.8,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         StatCard(
-                          label: 'Mínima',
-                          value: minTemp,
-                          color: Colors.blue,
-                          unit: '°C',
-                        ),
+                            label: 'Mínima',
+                            value: minPressao,
+                            color: Colors.orange,
+                            unit: 'hPa'),
                         SizedBox(width: 8),
                         StatCard(
-                          label: 'Média',
-                          value: avgTemp,
-                          color: Colors.orange,
-                          unit: '°C',
-                        ),
+                            label: 'Média',
+                            value: avgPressao,
+                            color: Colors.green,
+                            unit: 'hPa'),
                         SizedBox(width: 8),
                         StatCard(
-                          label: 'Máxima',
-                          value: maxTemp,
-                          color: Colors.red,
-                          unit: '°C',
-                        ),
+                            label: 'Máxima',
+                            value: maxPressao,
+                            color: Colors.red,
+                            unit: 'hPa'),
                       ],
                     ),
                     const SizedBox(height: 24),
@@ -189,35 +237,36 @@ class _TemperatureState extends State<Temperature> {
                         LineChartData(
                           lineBarsData: [
                             LineChartBarData(
-                              spots: temperaturaSpots,
+                              spots: pressaoSpots,
                               isCurved: true,
-                              color: Colors.redAccent,
+                              color: const Color.fromARGB(255, 196, 68, 255),
                               barWidth: 3,
                               belowBarData: BarAreaData(
                                 show: true,
-                                color: Colors.redAccent.withOpacity(0.2),
+                                color: const Color.fromARGB(255, 196, 68, 255)
+                                    .withOpacity(0.2),
                               ),
                               dotData: FlDotData(show: true),
                             ),
                           ],
                           minX: minX,
                           maxX: maxX,
-                          minY: 0,
-                          maxY: 45,
+                          minY: 950,
+                          maxY: 1060,
                           titlesData: FlTitlesData(
                             leftTitles: AxisTitles(
                               axisNameWidget: const Text(
-                                'Temperatura (°C)',
+                                'Pressão (hPa)',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                 ),
                               ),
-                              axisNameSize: 25,
+                              axisNameSize: 20,
                               sideTitles: SideTitles(
                                 showTitles: true,
-                                reservedSize: 20,
-                                interval: 5,
+                                reservedSize: 30,
+                                interval: 10,
                                 getTitlesWidget: (value, meta) => Padding(
                                   padding: const EdgeInsets.only(right: 4),
                                   child: Text(
@@ -270,7 +319,7 @@ class _TemperatureState extends State<Temperature> {
                           gridData: FlGridData(
                             show: true,
                             drawVerticalLine: true,
-                            horizontalInterval: 5,
+                            horizontalInterval: 10,
                             verticalInterval: 1,
                             getDrawingHorizontalLine: (value) => FlLine(
                               color: Colors.grey.shade300,
@@ -293,7 +342,8 @@ class _TemperatureState extends State<Temperature> {
                           lineTouchData: LineTouchData(
                             enabled: true,
                             touchTooltipData: LineTouchTooltipData(
-                              tooltipBgColor: Colors.redAccent,
+                              tooltipBgColor:
+                                  const Color.fromARGB(255, 196, 68, 255),
                               tooltipRoundedRadius: 12,
                               tooltipPadding: const EdgeInsets.all(8),
                               getTooltipItems: (touchedSpots) {
@@ -304,7 +354,7 @@ class _TemperatureState extends State<Temperature> {
                                           ? labels[index]
                                           : '';
                                   return LineTooltipItem(
-                                    'Hora: $time\nTemp: ${spot.y.toStringAsFixed(2)} °C',
+                                    'Hora: $time\nPressão: ${spot.y.toStringAsFixed(1)} hPa',
                                     const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -317,7 +367,7 @@ class _TemperatureState extends State<Temperature> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 80),
                   ],
                 ),
               ),
