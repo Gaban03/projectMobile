@@ -16,14 +16,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
-<<<<<<< HEAD
 import 'dart:math';
 import 'package:jh_mobile/view_models/_view_models_lib.dart';
 import 'package:jh_mobile/models/_models_lib.dart';
 import 'package:jh_mobile/repositories/_repositories_lib.dart';
-=======
 import 'package:shared_preferences/shared_preferences.dart';
->>>>>>> e088aac47146f9a120dd7df1aa9eef419e695bef
+
 
 part 'home_view.dart';
 part 'login.dart';
@@ -34,9 +32,7 @@ part 'monitoramento_compressor.dart';
 part 'emergency_history.dart';
 part 'compressor_control.dart';
 part 'about.dart';
-<<<<<<< HEAD
 part 'config_view.dart';
-=======
 part 'config_ip.dart';
 part 'config.dart';
->>>>>>> e088aac47146f9a120dd7df1aa9eef419e695bef
+

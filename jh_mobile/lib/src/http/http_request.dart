@@ -12,15 +12,10 @@ Future<String> getPort() async {
 
 Future<Map<String, dynamic>> fetchDados() async {
   try {
-<<<<<<< HEAD
-    final response =
-        await http.get(Uri.parse('http://192.168.0.28:1880/dados'));
-=======
     final ip = await getIp();
     final port = await getPort();
 
     final response = await http.get(Uri.parse('http://$ip:$port/dados'));
->>>>>>> e088aac47146f9a120dd7df1aa9eef419e695bef
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
     } else {
@@ -30,8 +25,6 @@ Future<Map<String, dynamic>> fetchDados() async {
     throw Exception('Erro na requisição: $e');
   }
 }
-<<<<<<< HEAD
-=======
 
 Future<bool> recebeEstado() async {
   final ip = await getIp();
@@ -70,4 +63,3 @@ Future<void> enviarEstado(bool estado) async {
     throw Exception('Erro na requisição POST: $e');
   }
 }
->>>>>>> e088aac47146f9a120dd7df1aa9eef419e695bef

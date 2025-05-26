@@ -160,11 +160,7 @@ class SideMenu extends StatelessWidget {
                     Navigator.of(context).pop();
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (ctx) {
-<<<<<<< HEAD
-                        return ConfigView();
-=======
                         return ConfigPage();
->>>>>>> e088aac47146f9a120dd7df1aa9eef419e695bef
                       }),
                     );
                   },

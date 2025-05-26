@@ -1,4 +1,3 @@
-
 import 'package:jh_mobile/repositories/_repositories_lib.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
