@@ -26,6 +26,7 @@ dependencies:
   path_provider: ^2.0.11
   fl_chart: ^0.65.0
   mqtt_client: ^10.8.0
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:
