@@ -11,6 +11,10 @@ class FirebaseMsg {
 
     FirebaseMessaging.onBackgroundMessage(handleNotification);
     FirebaseMessaging.onMessage.listen(handleNotification);
+
+    msgService.onTokenRefresh.listen((newToken) {
+    // envia o novo token pro backend
+    });
   }
 }
 
