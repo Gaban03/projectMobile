@@ -13,7 +13,7 @@ class _PressureState extends State<Pressure> {
   List<FlSpot> pressaoSpots = [];
   List<String> labels = [];
 
-  double pressaoAtual = 1013;
+  double pressaoAtual = 0;
   String dataHora = '';
   Timer? timer;
   double tempo = 0;
@@ -21,7 +21,7 @@ class _PressureState extends State<Pressure> {
   Future<void> atualizarDados() async {
     try {
       final data = await fetchDados();
-      double press = double.tryParse(data['pressao'].toString()) ?? 1013;
+      double press = double.tryParse(data['pressao'].toString()) ?? 0;
       String dataHoraRecebida = data['dataHora'] ?? '';
 
       if (!press.isFinite) throw Exception('Pressão inválida');
@@ -58,9 +58,9 @@ class _PressureState extends State<Pressure> {
   }
 
   Color get ponteiroColor {
-    if (pressaoAtual < 990) {
+    if (pressaoAtual <= 0) {
       return Colors.orange;
-    } else if (pressaoAtual <= 1020) {
+    } else if (pressaoAtual >= 15 && pressaoAtual <= 25) {
       return Colors.green;
     } else {
       return Colors.red;
@@ -159,20 +159,20 @@ class _PressureState extends State<Pressure> {
                     SfRadialGauge(
                       axes: <RadialAxis>[
                         RadialAxis(
-                          minimum: 950,
-                          maximum: 1050,
+                          minimum: 0,
+                          maximum: 40,
                           ranges: <GaugeRange>[
                             GaugeRange(
-                                startValue: 950,
-                                endValue: 990,
+                                startValue: 0,
+                                endValue: 14,
                                 color: Colors.orange),
                             GaugeRange(
-                                startValue: 990,
-                                endValue: 1020,
+                                startValue: 14,
+                                endValue: 27,
                                 color: Colors.green),
                             GaugeRange(
-                                startValue: 1020,
-                                endValue: 1050,
+                                startValue: 27,
+                                endValue: 40,
                                 color: Colors.red),
                           ],
                           pointers: <GaugePointer>[
@@ -251,8 +251,8 @@ class _PressureState extends State<Pressure> {
                           ],
                           minX: minX,
                           maxX: maxX,
-                          minY: 950,
-                          maxY: 1060,
+                          minY: 0,
+                          maxY: 40,
                           titlesData: FlTitlesData(
                             leftTitles: AxisTitles(
                               axisNameWidget: const Text(

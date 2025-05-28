@@ -11,6 +11,6 @@ void main() async {
   options: DefaultFirebaseOptions.currentPlatform,
   );
   await AppSettings.instance.initialize();
-  await FirebaseMsg().initFCM();
+  //await FirebaseMsg().initFCM();
   runApp(App());
 }
