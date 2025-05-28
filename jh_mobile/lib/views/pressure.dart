@@ -58,7 +58,7 @@ class _PressureState extends State<Pressure> {
   }
 
   Color get ponteiroColor {
-    if (pressaoAtual <= 0) {
+    if (pressaoAtual >= 0 && pressaoAtual <= 14) {
       return Colors.orange;
     } else if (pressaoAtual >= 15 && pressaoAtual <= 25) {
       return Colors.green;
