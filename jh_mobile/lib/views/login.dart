@@ -1,183 +1,225 @@
 part of '_views_lib.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key}); // Add key parameter
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  // variaveis para armazenar usuario e senha usando textEditingController para controlar o texto quando escrito
   final userEmail = TextEditingController();
   final userPassword = TextEditingController();
-
-  // Boleana para mostrar ou nao a senha
+  final formKey = GlobalKey<FormState>();
   bool visivel = true;
 
-  //Boleana para exibiar a mensagem de usuario ou senha invalido
-  bool isLoginTrue = false;
+  @override
+  Widget build(BuildContext context) {
+    final mediaSize = MediaQuery.of(context).size;
 
-  // chave global para o form
-  final formKey = GlobalKey<FormState>();
-
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    resizeToAvoidBottomInset: true,
-    body: GestureDetector(
+    return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 140),
-                Image.asset("assets/images/senai.png", width: 300),
-                SizedBox(height: 10),
-                Text(
-                  "Monitoramento Compressor",
-                  style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/senai-escola.jpg"),
+                  fit: BoxFit.cover,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      children: [
-                        // Input Email
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
+              ),
+            ),
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+              child: Container(
+                color: Colors.black.withOpacity(0.4),
+              ),
+            ),
+            SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  child: Column(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/senai.png",
+                            width: mediaSize.width * 0.6,
                           ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey.shade300),
-                            color: Colors.white,
-                          ),
-                          child: TextFormField(
-                            controller: userEmail,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Preencha o campo de email";
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              icon: Icon(Icons.person),
-                              hintText: "Email",
-                              border: InputBorder.none,
+                          const SizedBox(height: 16),
+                          Text(
+                            "Monitoramento Compressor",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 26,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 10,
+                                  color: Colors.black.withOpacity(0.4),
+                                  offset: const Offset(0, 3),
+                                )
+                              ],
                             ),
-                          ),
-                        ),
-                        SizedBox(height: 20),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 36),
 
-                        // Input Senha
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey.shade300),
-                            color: Colors.white,
-                          ),
-                          child: TextFormField(
-                            controller: userPassword,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Preencha o campo de senha";
-                              }
-                              return null;
-                            },
-                            obscureText: visivel,
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.lock),
-                              hintText: "Senha",
-                              border: InputBorder.none,
-                              suffixIcon: IconButton(
-                                onPressed: () {
+                      // Card do login
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.95),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 15,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: Form(
+                          key: formKey,
+                          child: Column(
+                            children: [
+                              CustomTextField(
+                                controller: userEmail,
+                                label: "Email",
+                                hint: "Digite seu email",
+                                prefixIcon: Icons.email_outlined,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Preencha o campo de email";
+                                  }
+                                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                      .hasMatch(value)) {
+                                    return 'Insira um email válido';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              CustomTextField(
+                                controller: userPassword,
+                                label: "Senha",
+                                hint: "Digite sua senha",
+                                prefixIcon: Icons.lock_outline,
+                                isPassword: true,
+                                obscureText: visivel,
+                                onToggleVisibility: () {
                                   setState(() {
                                     visivel = !visivel;
                                   });
                                 },
-                                icon: Icon(
-                                  visivel ? Icons.visibility : Icons.visibility_off,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Preencha o campo de senha";
+                                  }
+                                  if (value.length < 6) {
+                                    return 'Senha deve ter pelo menos 6 caracteres';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 28),
+                              ConstrainedBox(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 400),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFFD32F2F),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14),
+                                      elevation: 5,
+                                    ),
+                                    onPressed: () async {
+                                      if (formKey.currentState!.validate()) {
+                                        await AuthService().signin(
+                                          email: userEmail.text,
+                                          password: userPassword.text,
+                                          context: context,
+                                        );
+                                      }
+                                    },
+                                    child: const Text(
+                                      "Entrar",
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        letterSpacing: 1.1,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              const SizedBox(height: 12),
+                              TextButton(
+                                onPressed: () {},
+                                child: const Text(
+                                  "Não tem cadastro? Crie uma conta",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              InkWell(
+                                onTap: () async {
+                                  await AuthService()
+                                      .loginWithGoogle(context: context);
+                                },
+                                borderRadius: BorderRadius.circular(30),
+                                child: Container(
+                                  width: 58,
+                                  height: 58,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.15),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 5),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: SvgPicture.asset(
+                                      'assets/images/google-logo.svg',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(height: 30),
-                        // Botão de login
-                        Container(
-                          height: 60,
-                          width: MediaQuery.of(context).size.width * .9,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Colors.redAccent,
-                          ),
-                          child: TextButton(
-                            onPressed: () async {
-                              if (formKey.currentState!.validate()) {
-                                await AuthService().signin(
-                                  email: userEmail.text,
-                                  password: userPassword.text,
-                                  context: context,
-                                );
-                              }
-                            },
-                            child: Text(
-                              "Login",
-                              style: TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("Não tem cadastro?"),
-                            TextButton(
-                              onPressed: () {
-                                // navegar para cadastro
-                              },
-                              child: Text(
-                                "SIGN UP",
-                                style: TextStyle(color: Colors.redAccent),
-                              ),
-                            ),
-                          ],
-                        ),
-                              /*
-                              Login com microsoft
-                              ElevatedButton.icon(onPressed: () async{
-                                  await AuthService().signInWithMicrosoft(context: context);
-                              },
-                              icon: const Icon(FontAwesomeIcons.microsoft),
-                              label: const Text("Entrar com Microsoft", style: TextStyle(color: Colors.black)),
-                              ),
-                              */
-
-                              ElevatedButton.icon(onPressed: () async{
-                                await AuthService().loginWithGoogle(context: context);
-                              },
-                                icon: const Icon(FontAwesomeIcons.google, color: Colors.redAccent,),
-                                label: const Text("Entrar com Google", style: TextStyle(color: Colors.black)),
-                              ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 30),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

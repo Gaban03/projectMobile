@@ -31,7 +31,7 @@ class _HomeViewState extends State<HomeView> {
                 child: Text(
                   "Serviços Disponíveis",
                   style: TextStyle(
-                    color: const Color.fromARGB(255, 187, 187, 187),
+                    color: const Color.fromARGB(255, 182, 182, 182),
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),

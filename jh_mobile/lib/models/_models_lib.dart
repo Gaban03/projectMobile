@@ -1,2 +1,1 @@
-import 'dart:convert';
-part 'configuration_model.dart';
+part 'developer.dart';

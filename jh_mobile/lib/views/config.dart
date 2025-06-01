@@ -12,23 +12,37 @@ class _ConfigPageState extends State<ConfigPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Content(
-          title: "SENAI",
-          body: ListView(
-            children: [
-            ListTile(
-            leading: const Icon(Icons.settings_ethernet),
-            title: const Text("Configurar IP", style: TextStyle(fontSize: 25,),),
-            trailing: const Icon(Icons.arrow_forward_ios),
-            onTap: () {
-              Navigator.push(
+        title: "SENAI",
+        body: ListView(
+          padding: const EdgeInsets.all(12),
+          children: [
+            const SectionTitle("Rede"),
+            ConfigListTile(
+              title: "Configurar IP",
+              icon: Icons.language,
+              onTap: () {
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ConfigIP(),
-                  ));
-            },
-          ),
-        ],
+                  MaterialPageRoute(builder: (_) => const ConfigIP()),
+                );
+              },
+            ),
+            SizedBox(height: 15),
+            const SectionTitle("Sistema"),
+            ConfigListTile(
+              title: "Sobre o dispositivo",
+              icon: Icons.info_outline,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const AboutDispositiveView()),
+                );
+              },
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
-
