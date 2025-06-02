@@ -10,12 +10,10 @@ class EmergencyHistory extends StatefulWidget {
 class _EmergencyHistoryState extends State<EmergencyHistory> {
 
   Future<bool> _onWillPop() async {
-    // Navegar para a HomeView substituindo a tela atual
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const HomeView()),
     );
-    // Impedir a navegação para a tela anterior
     return false;
   }
 

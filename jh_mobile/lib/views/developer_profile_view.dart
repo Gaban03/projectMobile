@@ -2,16 +2,10 @@ part of '_views_lib.dart';
 
 class DeveloperProfilePage extends StatelessWidget {
   final Developer developer;
-  final int posts;
-  final int followers;
-  final int following;
 
   const DeveloperProfilePage({
     super.key,
     required this.developer,
-    this.posts = 42,
-    this.followers = 1000,
-    this.following = 345,
   });
 
   @override
@@ -60,10 +54,7 @@ class DeveloperProfilePage extends StatelessWidget {
                       )
                     : null,
               ),
-
               const SizedBox(height: 24),
-
-              // Nome e Cargo
               Text(
                 developer.nome,
                 style: GoogleFonts.robotoSlab(
@@ -81,14 +72,11 @@ class DeveloperProfilePage extends StatelessWidget {
                   fontStyle: FontStyle.italic,
                 ),
               ),
-
               const SizedBox(height: 28),
               _infoCard(icon: Icons.email, label: developer.email),
               const SizedBox(height: 10),
               _infoCard(icon: Icons.phone, label: developer.telefone),
-
               const SizedBox(height: 32),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -144,28 +132,26 @@ class DeveloperProfilePage extends StatelessWidget {
   }) {
     final bool enabled = url != null && url.isNotEmpty;
 
-    return Opacity(
-      opacity: enabled ? 1.0 : 0.4,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(40),
-        onTap: enabled
-            ? () {
-                // Descomente e adicione isso no seu pubspec.yaml:
-                // launchUrlString(url!);
+    return InkWell(
+      borderRadius: BorderRadius.circular(40),
+      onTap: enabled
+          ? () {
+              if (url.isNotEmpty) {
+                launchUrlString(url);
               }
-            : null,
-        child: Tooltip(
-          message: tooltip,
-          child: Container(
-            width: 60,
-            height: 60,
-            child: ClipOval(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Image.asset(
-                  assetPath,
-                  fit: BoxFit.contain,
-                ),
+            }
+          : null,
+      child: Tooltip(
+        message: tooltip,
+        child: SizedBox(
+          width: 60,
+          height: 60,
+          child: ClipOval(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Image.asset(
+                assetPath,
+                fit: BoxFit.contain,
               ),
             ),
           ),
