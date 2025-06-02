@@ -56,15 +56,17 @@ class _CompressorControlState extends State<CompressorControl> {
                 ),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(30.0),
-                      child: Text(
-                        "Controle do Compressor",
-                        style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87),
-                      ),
+
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .08,
+                    ),
+
+                    Text(
+                      "Controle do Compressor",
+                      style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87),
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .05,
