@@ -10,6 +10,7 @@ class CompressorControl extends StatefulWidget {
 class _CompressorControlState extends State<CompressorControl> {
   bool isTapped = false;
   bool ligado = false;
+  String? dataEstado;
 
   @override
   void initState() {
@@ -19,9 +20,12 @@ class _CompressorControlState extends State<CompressorControl> {
 
   Future<void> carregarEstado() async {
     try {
-      bool estado = await recebeEstado();
+      final estadoBobina = await recebeEstado();
+      bool estado = estadoBobina['bobina'];
+      String data = estadoBobina['data'];
       setState(() {
         ligado = estado;
+        dataEstado = data;
       });
     } catch (e) {
       print('Erro ao carregar estado: $e');
@@ -52,20 +56,65 @@ class _CompressorControlState extends State<CompressorControl> {
                 ),
                 child: Column(
                   children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .25,
-                    ),
-                    Icon(
-                      ligado ? Icons.power : Icons.power_off,
-                      color: ligado ? Colors.red : Colors.grey,
-                      size: 100,
-                    ),
-                    Text(
-                      ligado ? 'Compressor ligado' : 'Compressor desligado',
-                      style: TextStyle(fontSize: 18),
+                    Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Text(
+                        "Controle do Compressor",
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87),
+                      ),
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .05,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 30.0, horizontal: 0),
+                      child: Text(
+                        dataEstado != null
+                            ? 'Última atividade: $dataEstado'
+                            : 'Carregando data...',
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      ),
+                    ),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: ligado ? Colors.red : Colors.grey.shade400,
+                        boxShadow: ligado
+                            ? [
+                                BoxShadow(
+                                  color: Colors.redAccent.withOpacity(0.6),
+                                  blurRadius: 20,
+                                  spreadRadius: 5,
+                                ),
+                              ]
+                            : [],
+                      ),
+                      child: Icon(
+                        ligado ? Icons.power : Icons.power_off,
+                        size: 100,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .02,
+                    ),
+                    Text(
+                      ligado ? 'Compressor ligado' : 'Compressor desligado',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: ligado ? Colors.redAccent : Colors.grey,
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .03,
                     ),
                     Center(
                         child: Container(
@@ -86,10 +135,16 @@ class _CompressorControlState extends State<CompressorControl> {
                               isTapped = true;
                               final novoEstado = !ligado;
                               await enviarEstado(novoEstado);
+
+                              final resultado = await recebeEstado();
+                              bool bobinaEstado = resultado['bobina'];
+                              String novaData = resultado['data'];
                               setState(() {
-                                ligado = novoEstado;
+                                ligado = bobinaEstado;
+                                dataEstado = novaData;
                               });
-                              await Future.delayed(const Duration(milliseconds: 5000));
+                              await Future.delayed(
+                                  const Duration(milliseconds: 5000));
                               isTapped = false;
                             } catch (e) {
                               print('Erro ao enviar estado $e');

@@ -7,8 +7,9 @@ class FirebaseMsg {
     await msgService.requestPermission();
 
     var token = await msgService.getToken();
-    print("Token FCM: $token");
+    //print("Token FCM: $token");
 
+    await msgService.subscribeToTopic('all');
     FirebaseMessaging.onBackgroundMessage(handleNotification);
     FirebaseMessaging.onMessage.listen(handleNotification);
 

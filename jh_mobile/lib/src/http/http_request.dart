@@ -26,7 +26,7 @@ Future<Map<String, dynamic>> fetchDados() async {
   }
 }
 
-Future<bool> recebeEstado() async {
+Future<Map<String, dynamic>> recebeEstado() async {
   final ip = await getIp();
   final port = await getPort();
 
@@ -34,7 +34,10 @@ Future<bool> recebeEstado() async {
     final response = await http.get(Uri.parse('http://$ip:$port/bobina'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data['bobina'] as bool;
+      return {
+        'bobina': data['bobina'] as bool,
+        'data': data['data'] as String,
+      };
     } else {
       throw Exception('Erro ao carregar estado: ${response.statusCode}');
     }

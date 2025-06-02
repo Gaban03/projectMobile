@@ -16,7 +16,7 @@
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 280,
+        "x": 180,
         "y": 180,
         "wires": [
             [
@@ -38,8 +38,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 530,
-        "y": 80,
+        "x": 470,
+        "y": 120,
         "wires": []
     },
     {
@@ -49,7 +49,7 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 710,
+        "x": 630,
         "y": 180,
         "wires": []
     },
@@ -62,8 +62,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 230,
-        "y": 320,
+        "x": 170,
+        "y": 240,
         "wires": [
             [
                 "b3603be98949abb3"
@@ -82,8 +82,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 530,
-        "y": 320,
+        "x": 390,
+        "y": 240,
         "wires": [
             [
                 "c8a0cdf5b183a28a"
@@ -97,8 +97,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 730,
-        "y": 320,
+        "x": 630,
+        "y": 240,
         "wires": []
     },
     {
@@ -110,7 +110,7 @@
         "method": "post",
         "upload": false,
         "swaggerDoc": "",
-        "x": 210,
+        "x": 170,
         "y": 460,
         "wires": [
             [
@@ -127,8 +127,8 @@
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 270,
-        "y": 560,
+        "x": 150,
+        "y": 520,
         "wires": [
             [
                 "85c7a351ab0dac2b"
@@ -142,8 +142,8 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 670,
-        "y": 560,
+        "x": 570,
+        "y": 520,
         "wires": []
     },
     {
@@ -153,7 +153,7 @@
         "name": "",
         "statusCode": "",
         "headers": {},
-        "x": 610,
+        "x": 570,
         "y": 460,
         "wires": []
     },
@@ -162,17 +162,18 @@
         "type": "function",
         "z": "2dfbcaca9b8949e2",
         "name": "function 2",
-        "func": "if (msg.payload.bobina !== undefined) {\n    flow.set(\"estado_bobina\", msg.payload.bobina); // salva no contexto\n}\n\nreturn msg;\n",
+        "func": "if (msg.payload.bobina !== undefined) {\n    flow.set(\"estado_bobina\", msg.payload.bobina); \n    flow.set(\"data_bobina\", new Date().toLocaleString('pt-BR'));\n}\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 420,
+        "x": 400,
         "y": 460,
         "wires": [
             [
+                "34915d47eced9761",
                 "5e2cdb8fcb1db95a"
             ]
         ]
@@ -182,15 +183,15 @@
         "type": "function",
         "z": "2dfbcaca9b8949e2",
         "name": "function 3",
-        "func": "let bobina = flow.get(\"estado_bobina\") || false;\n\nmsg.payload = {\n    bobina: bobina\n};\n\nreturn msg;",
+        "func": "let bobina = flow.get(\"estado_bobina\") || false;\nlet dataBobina = flow.get(\"data_bobina\") || null;\n\nmsg.payload = {\n    bobina: bobina,\n    data: dataBobina\n};\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 480,
-        "y": 560,
+        "x": 400,
+        "y": 520,
         "wires": [
             [
                 "917a38a00d8376f9",
@@ -211,8 +212,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 800,
-        "y": 500,
+        "x": 560,
+        "y": 580,
         "wires": []
     },
     {
@@ -245,12 +246,55 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 520,
+        "x": 400,
         "y": 180,
         "wires": [
             [
-                "11db2840f4dd5120"
+                "11db2840f4dd5120",
+                "34915d47eced9761"
             ]
+        ]
+    },
+    {
+        "id": "34915d47eced9761",
+        "type": "function",
+        "z": "2dfbcaca9b8949e2",
+        "name": "Montar notificação",
+        "func": "let bobina = msg.payload.bobina;\nlet temperatura = msg.payload.temperatura;\nlet pressao = msg.payload.pressao;\nlet umidade = msg.payload.umidade;\n\nlet evento;\nlet mensagem = \"\";\nlet hora = new Date().toLocaleTimeString();\n\nif (bobina !== undefined) {\n  evento = bobina ? \"ligar\" : \"desligar\";\n} else if (\n  (temperatura !== undefined && temperatura > 50) ||\n  (pressao !== undefined && pressao > 40) ||\n  (umidade !== undefined && umidade > 85)\n) {\n  evento = \"critico\";\n\n  if (temperatura > 50) mensagem += \"Temperatura muito alta! \";\n  if (pressao > 40) mensagem += \"Pressão muito alta! \";\n  if (umidade > 85) mensagem += \"Umidade muito alta! \";\n} else {\n  return null;\n}\n\nmsg.payload = {\n  evento: evento,\n  hora: hora,\n  mensagem: mensagem.trim()\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 340,
+        "wires": [
+            [
+                "da6c92169b5af60c"
+            ]
+        ]
+    },
+    {
+        "id": "da6c92169b5af60c",
+        "type": "http request",
+        "z": "2dfbcaca9b8949e2",
+        "name": "Enviar notificação (POST)",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://localhost:5000/sendNoti",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 930,
+        "y": 340,
+        "wires": [
+            []
         ]
     },
     {
