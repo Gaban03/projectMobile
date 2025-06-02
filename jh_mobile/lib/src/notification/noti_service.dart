@@ -26,6 +26,8 @@ class NotiService {
         android: AndroidNotificationDetails(
             'compressor_channelId',
             'Notificação do Compressor',
+            importance: Importance.max,
+            priority: Priority.high,
             icon: 'compressor',
             channelDescription: 'Canal de notificação do compressor'));
   }
