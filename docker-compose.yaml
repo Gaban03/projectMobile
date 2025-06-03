@@ -24,6 +24,15 @@ services:
       - "3309:3306"  
     networks:
       - compressor
+  
+  data-service:
+    build: ./dataService
+    ports: 
+      - "5001:5000"
+    networks:
+      - compressor
+    depends_on:
+      - node-red
 
 volumes: 
   db_data:

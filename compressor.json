@@ -17,11 +17,12 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 180,
-        "y": 180,
+        "y": 200,
         "wires": [
             [
                 "f22308fe35389bc4",
-                "76b7ab566307625e"
+                "76b7ab566307625e",
+                "da035f7b8307fef4"
             ]
         ]
     },
@@ -38,8 +39,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 470,
-        "y": 120,
+        "x": 410,
+        "y": 140,
         "wires": []
     },
     {
@@ -50,7 +51,7 @@
         "statusCode": "",
         "headers": {},
         "x": 630,
-        "y": 180,
+        "y": 200,
         "wires": []
     },
     {
@@ -63,7 +64,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 170,
-        "y": 240,
+        "y": 260,
         "wires": [
             [
                 "dd71df27de4efe49"
@@ -83,11 +84,10 @@
         "finalize": "",
         "libs": [],
         "x": 390,
-        "y": 240,
+        "y": 260,
         "wires": [
             [
-                "1a6ed5ca185826c7",
-                "c7088676187a54fe"
+                "1a6ed5ca185826c7"
             ]
         ]
     },
@@ -99,7 +99,7 @@
         "statusCode": "",
         "headers": {},
         "x": 630,
-        "y": 240,
+        "y": 260,
         "wires": []
     },
     {
@@ -112,7 +112,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 170,
-        "y": 460,
+        "y": 480,
         "wires": [
             [
                 "da076008f342ef1c"
@@ -129,7 +129,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 150,
-        "y": 520,
+        "y": 540,
         "wires": [
             [
                 "eb78525578f290df"
@@ -144,7 +144,7 @@
         "statusCode": "",
         "headers": {},
         "x": 570,
-        "y": 520,
+        "y": 540,
         "wires": []
     },
     {
@@ -155,7 +155,7 @@
         "statusCode": "",
         "headers": {},
         "x": 570,
-        "y": 460,
+        "y": 480,
         "wires": []
     },
     {
@@ -171,7 +171,7 @@
         "finalize": "",
         "libs": [],
         "x": 400,
-        "y": 460,
+        "y": 480,
         "wires": [
             [
                 "d5017d2bf09fcdbb",
@@ -192,7 +192,7 @@
         "finalize": "",
         "libs": [],
         "x": 400,
-        "y": 520,
+        "y": 540,
         "wires": [
             [
                 "1a33f01948a5c5d0",
@@ -214,7 +214,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 560,
-        "y": 580,
+        "y": 600,
         "wires": []
     },
     {
@@ -230,7 +230,7 @@
         "finalize": "",
         "libs": [],
         "x": 400,
-        "y": 180,
+        "y": 200,
         "wires": [
             [
                 "5f3f2714a83f9525",
@@ -243,7 +243,7 @@
         "type": "function",
         "z": "1459331f22612cb1",
         "name": "Montar notificação",
-        "func": "let bobina = msg.payload.bobina;\nlet temperatura = msg.payload.temperatura;\nlet pressao = msg.payload.pressao;\nlet umidade = msg.payload.umidade;\n\nlet evento;\nlet mensagem = \"\";\nlet hora = new Date().toLocaleTimeString();\n\nif (bobina !== undefined) {\n  evento = bobina ? \"ligar\" : \"desligar\";\n} else if (\n  (temperatura !== undefined && temperatura > 50) ||\n  (pressao !== undefined && pressao > 40) ||\n  (umidade !== undefined && umidade > 85)\n) {\n  evento = \"critico\";\n\n  if (temperatura > 50) mensagem += \"Temperatura muito alta! \";\n  if (pressao > 40) mensagem += \"Pressão muito alta! \";\n  if (umidade > 85) mensagem += \"Umidade muito alta! \";\n} else {\n  return null;\n}\n\nmsg.payload = {\n  evento: evento,\n  hora: hora,\n  mensagem: mensagem.trim()\n};\n\nreturn msg;",
+        "func": "let bobina = msg.payload.bobina;\nlet temperatura = msg.payload.temperatura;\nlet pressao = msg.payload.pressao;\nlet umidade = msg.payload.umidade;\n\nlet evento;\nlet mensagem = \"\";\nlet hora = new Date().toLocaleTimeString();\n\nif (bobina !== undefined) {\n  evento = bobina ? \"ligar\" : \"desligar\";\n} else if (\n  (temperatura !== undefined && temperatura > 50) ||\n  (pressao !== undefined && pressao > 40) ||\n  (umidade !== undefined && umidade > 85)\n) {\n  evento = \"critico\";\n\n  if (temperatura > 50) mensagem += \"Temperatura muito alta! \";\n  if (pressao > 40) mensagem += \"Pressão muito alta! \";\n  if (umidade > 85) mensagem += \"Umidade muito alta! \";\n} else {\n  return null;\n}\n\nmsg.payload = {\n  evento: evento,\n  hora: hora,\n  mensagem: mensagem.trim()\n};\n\nflow.set(\"notificacao\", msg.payload);\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -251,7 +251,7 @@
         "finalize": "",
         "libs": [],
         "x": 670,
-        "y": 340,
+        "y": 360,
         "wires": [
             [
                 "47cc17c1eabc6762"
@@ -266,7 +266,7 @@
         "method": "POST",
         "ret": "txt",
         "paytoqs": "ignore",
-        "url": "http://localhost:5000/sendNoti",
+        "url": "http://data-service:5000/sendNoti",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -275,25 +275,51 @@
         "senderr": false,
         "headers": [],
         "x": 930,
-        "y": 340,
+        "y": 360,
         "wires": [
             []
         ]
     },
     {
-        "id": "c7088676187a54fe",
-        "type": "debug",
+        "id": "0b2fb7529938993c",
+        "type": "http request",
         "z": "1459331f22612cb1",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 420,
-        "y": 340,
-        "wires": []
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://data-service:5000/saveDB",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 580,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "da035f7b8307fef4",
+        "type": "function",
+        "z": "1459331f22612cb1",
+        "name": "saveDB",
+        "func": "let dados = flow.get(\"dados_bobina\") || {};\nlet estado = flow.get(\"estado_bobina\") || \"desligado\";\nlet notificacao = flow.get(\"notificacao\") || {};\n\nmsg.payload = {\n    horario: new Date().toLocaleString('pt-BR'),\n    temperatura: dados.temperatura || null,\n    umidade: dados.umidade || null,\n    pressao: dados.pressao || null,\n    estado: estado,\n    notificacao: notificacao.notificacao || \"Sem alerta\"\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 60,
+        "wires": [
+            [
+                "0b2fb7529938993c"
+            ]
+        ]
     }
 ]
