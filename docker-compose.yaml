@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  node-red:
+    build: .
+    image: nodered/node-red
+    ports:
+      - "1880:1880"
+    volumes:
+      - nodered_data:/data
+      - ./compressor.json:/data/flows.json
+
+    networks:
+      - compressor
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: compressor
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3309:3306"  
+    networks:
+      - compressor
+
+volumes: 
+  db_data:
+  nodered_data:
+
+networks:
+  compressor: 
+    driver: bridge
