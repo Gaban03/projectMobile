@@ -8,7 +8,6 @@ class Developer {
   final String? fotoUrl;
   final String? githubUrl;
   final String? linkedinUrl;
-  final String? twitterUrl;
 
   Developer({
     required this.nome,
@@ -18,6 +17,5 @@ class Developer {
     this.fotoUrl,
     this.githubUrl,
     this.linkedinUrl,
-    this.twitterUrl,
   });
 }

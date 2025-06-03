@@ -50,6 +50,7 @@ class _AboutState extends State<About> {
       telefone: 'Celular: (16) 99100-0062',
       fotoUrl: 'assets/images/img_gaban.jpg',
       githubUrl: 'https://github.com/Gaban03',
+      linkedinUrl: 'https://www.linkedin.com/in/vinicius-gaban/',
     ),
   ];
 
